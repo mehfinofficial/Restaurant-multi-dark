@@ -9,9 +9,9 @@ window.addEventListener("load", () => {
             splash.remove();
 
             // 🔥 OPEN OUTLET SELECTOR AFTER SPLASH
-            if (!localStorage.getItem("selectedOutlet")) {
-                openOutletSheet();
-            }
+          if (!sessionStorage.getItem("selectedOutlet")) {
+    openOutletSheet();
+}
 
         }, 600);
 
@@ -241,7 +241,7 @@ let deliveryFee = 0;
 
 
 function loadSavedOutlet() {
-    const saved = localStorage.getItem("selectedOutlet");
+    const saved = sessionStorage.getItem("selectedOutlet");
     if (saved) {
         selectedOutlet = JSON.parse(saved);
     }
@@ -249,7 +249,7 @@ function loadSavedOutlet() {
 
 function saveOutlet(outlet) {
     selectedOutlet = outlet;
-    localStorage.setItem("selectedOutlet", JSON.stringify(outlet));
+    sessionStorage.setItem("selectedOutlet", JSON.stringify(outlet));
 }
 // ====================
 // LOAD CART FROM STORAGE
@@ -285,9 +285,6 @@ fetch("menu.json")
     selectedOutlet = data.outlets[0];
 }
 
-if (!localStorage.getItem("selectedOutlet")) {
-    
-}
 
 deliveryFee = selectedOutlet.deliveryFee; // ✅ IMPORTANT
     menuData = data;
