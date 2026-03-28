@@ -9,7 +9,7 @@ window.addEventListener("load", () => {
             splash.remove();
 
             // 🔥 OPEN OUTLET SELECTOR AFTER SPLASH
-          if (!sessionStorage.getItem("selectedOutlet")) {
+            if (!sessionStorage.getItem("selectedOutlet")) {
     openOutletSheet();
 }
 
@@ -284,6 +284,7 @@ fetch("menu.json")
     if (!selectedOutlet) {
     selectedOutlet = data.outlets[0];
 }
+
 
 
 deliveryFee = selectedOutlet.deliveryFee; // ✅ IMPORTANT
@@ -929,9 +930,8 @@ document.getElementById("checkoutBtn").addEventListener("click", () => {
     // ⭐ OPEN CHECKOUT (your method)
     document.body.classList.add("body-lock");
     document.getElementById("checkoutPage").classList.add("show");
-    updateCheckoutOutlet();
     document.documentElement.classList.add("html-lock");
-
+updateCheckoutOutlet();
 });
 
 
@@ -1116,9 +1116,9 @@ showThankYou();
 
 // 🟧 RELOAD PAGE + SCROLL TOP **AFTER** thank-you is shown
 setTimeout(() => {
-    window.scrollTo(0, 0);   // Scroll to top
-    location.reload();       // Reload page
-}, 12000);  // matches thank-you popup duration
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => location.reload(), 600);   // wait for scroll, then reload
+}, 12000); // matches thank-you popup duration
 
 });
 
@@ -1400,15 +1400,21 @@ window.addEventListener("appinstalled", () => {
 
 function changeOutlet(outlet) {
 
+    // Already selected — do nothing
+    if (selectedOutlet && selectedOutlet.id === outlet.id) {
+        closeOutletSheet();
+        return;
+    }
+
     if (cart.length > 0) {
-        openConfirmSheet(outlet);  // 🔥 NEW
+        openConfirmSheet(outlet);
         return;
     }
 
     saveOutlet(outlet);
-    location.reload();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => location.reload(), 600);
 }
-
 
 function confirmOutletChange() {
 
@@ -1422,7 +1428,8 @@ function confirmOutletChange() {
     saveOutlet(pendingOutlet);
 
     // 🔄 reload app
-    location.reload();
+window.scrollTo({ top: 0, behavior: "smooth" });
+setTimeout(() => location.reload(), 600);
 }
 
 
@@ -1471,4 +1478,15 @@ function selectOutletFromSheet(id) {
 function updateCheckoutOutlet() {
     document.getElementById("checkoutOutletName").innerText =
         selectedOutlet.name;
+}
+
+function scrollToItem(itemName) {
+    const cards = document.querySelectorAll(".food-card");
+    for (let card of cards) {
+        const h6 = card.querySelector("h6");
+        if (h6 && h6.innerText.trim().toLowerCase() === itemName.toLowerCase()) {
+            card.scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+        }
+    }
 }
